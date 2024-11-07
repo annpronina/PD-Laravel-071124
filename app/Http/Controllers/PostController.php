@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use Illuminate\Http\Request;
 
+
 class PostController extends Controller
 {
     /**
@@ -13,7 +14,7 @@ class PostController extends Controller
     public function index()
     {
         $posts = Post::all();
-        return view('posts.index');
+        return view('posts.index', ['posts' => $posts]);
     }
 
     /**
@@ -31,7 +32,8 @@ class PostController extends Controller
     {
         $data = [
             'title' => $request->title,
-            'content' => $request->content
+            'content' => $request->content,
+            'published_at' => $request->published_at
         ];
 
         Post::create($data);
@@ -42,11 +44,13 @@ class PostController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show()
+    public function show($id)
     {
+        $post = Post::find($id);
         return view('posts.show', ['post' => $post]);
     }
-    
+
+
     /**
      * Show the form for editing the specified resource.
      */
@@ -61,13 +65,13 @@ class PostController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $post = Post::find($id);
-
         $data = [
             'title' => $request->title,
-            'content' => $request->content
+            'content' => $request->content,
+            'published_at' => $request->published_at
         ];
 
+        $post = Post::find($id);
         $post->update($data);
 
         return redirect('/posts');
@@ -76,10 +80,10 @@ class PostController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function delete($id)
     {
         $post = Post::find($id);
         $post->delete();
         return redirect('/posts');
-    }    
+    }
 }
